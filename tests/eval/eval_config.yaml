@@ -1,0 +1,9 @@
+metrics_to_run:
+  - agent_turn_count
+
+custom_metrics:
+  - name: agent_turn_count
+    custom_function: |
+      def evaluate(instance):
+          turns = (instance.get("agent_data") or {}).get("turns", [])
+          return {'score': len(turns)}
