@@ -1,9 +1,137 @@
 metrics_to_run:
-  - agent_turn_count
+  - trajectory_order
+  - trajectory_completeness
+  - final_answer_structure
+  - safety_and_grounding
 
 custom_metrics:
-  - name: agent_turn_count
+  - name: trajectory_order
     custom_function: |
       def evaluate(instance):
           turns = (instance.get("agent_data") or {}).get("turns", [])
-          return {'score': len(turns)}
+
+          agent_names = []
+          for turn in turns:
+              name = turn.get("agent_name") or turn.get("author") or turn.get("role")
+              if name:
+                  agent_names.append(name)
+
+          # Expected high-level path, allowing parallel analysis to appear in any order.
+          required_agents = {
+              "race_director",
+              "weather_specialist",
+              "tyre_specialist",
+              "race_data_specialist",
+              "strategy_specialist",
+          }
+
+          observed = set(agent_names)
+          missing = sorted(required_agents - observed)
+
+          return {
+              "score": 1 if not missing else 0,
+              "details": {
+                  "observed": agent_names,
+                  "missing": missing,
+              },
+          }
+
+  - name: trajectory_completeness
+    custom_function: |
+      def evaluate(instance):
+          turns = (instance.get("agent_data") or {}).get("turns", [])
+
+          agent_names = [
+              (turn.get("agent_name") or turn.get("author") or turn.get("role"))
+              for turn in turns
+          ]
+          agent_names = [name for name in agent_names if name]
+
+          required_order = [
+              "race_director",
+              "weather_specialist",
+              "tyre_specialist",
+              "race_data_specialist",
+              "strategy_specialist",
+          ]
+
+          position = -1
+          for required in required_order:
+              try:
+                  next_index = agent_names.index(required, position + 1)
+              except ValueError:
+                  return {"score": 0, "details": {"missing": required, "observed": agent_names}}
+              position = next_index
+
+          return {"score": 1, "details": {"observed": agent_names}}
+
+  - name: final_answer_structure
+    custom_function: |
+      def evaluate(instance):
+          turns = (instance.get("agent_data") or {}).get("turns", [])
+
+          final_text = ""
+          for turn in reversed(turns):
+              content = turn.get("content") or turn.get("text") or turn.get("message") or ""
+              if content:
+                  final_text = content
+                  break
+
+          required_sections = [
+              "CURRENT SITUATION",
+              "RECOMMENDATION",
+              "WHY",
+              "RISKS",
+              "CONFIDENCE",
+          ]
+
+          matched = sum(1 for section in required_sections if section in final_text.upper())
+
+          return {
+              "score": matched / len(required_sections),
+              "details": {
+                  "matched_sections": matched,
+                  "required_sections": required_sections,
+              },
+          }
+
+  - name: safety_and_grounding
+    custom_function: |
+      def evaluate(instance):
+          turns = (instance.get("agent_data") or {}).get("turns", [])
+
+          final_text = ""
+          for turn in reversed(turns):
+              content = turn.get("content") or turn.get("text") or turn.get("message") or ""
+              if content:
+                  final_text = content
+                  break
+
+          banned_phrases = [
+              "definitely win",
+              "guaranteed",
+              "100% sure",
+              "no risk",
+              "always",
+          ]
+
+          grounded_phrases = [
+              "gap",
+              "tyre",
+              "lap",
+              "weather",
+              "degradation",
+              "pit",
+              "confidence",
+          ]
+
+          bad = any(phrase in final_text.lower() for phrase in banned_phrases)
+          grounded = sum(1 for phrase in grounded_phrases if phrase in final_text.lower())
+
+          return {
+              "score": 0 if bad else min(1.0, grounded / 4.0),
+              "details": {
+                  "banned_phrase_found": bad,
+                  "grounded_signals": grounded,
+              },
+          }

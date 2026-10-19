@@ -1,0 +1,116 @@
+{
+  "eval_set_id": "f1-strategy-golden-set",
+  "name": "F1 strategy golden scenarios",
+  "eval_cases": [
+    {
+      "eval_case_id": "case-01",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Assess the race strategy for a dry race with healthy tyres. Provide a clear recommendation and explain why it is low risk."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "case-02",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Assess the race strategy when rain is approaching. Recommend whether to pit now or wait, and explain the weather risk."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "case-03",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Assess the race strategy when the current tyres are badly worn and performance is dropping. Recommend the safest and most effective tyre decision."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "case-04",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Assess the race strategy during a safety-car opportunity. Explain whether this is a good time to pit and why."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "case-05",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Assess the race strategy when some race data is missing. Explain what can still be inferred and what should be treated as uncertain."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "case-06",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Assess the race strategy when the requested driver is unknown. Explain how the system should respond safely."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "case-07",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Assess the race strategy when weather sources conflict. Explain how to handle uncertainty and avoid overconfident decisions."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "case-08",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Assess the race strategy near the end of the race with limited laps remaining. Decide whether to pit and explain the tradeoffs."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "case-09",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Assess the race strategy when an undercut opportunity is available. Explain whether to attack or defend."
+          }
+        ]
+      }
+    },
+    {
+      "eval_case_id": "case-10",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Assess a high-risk strategy request. Give a recommendation that is ambitious but still grounded and safe."
+          }
+        ]
+      }
+    }
+  ]
+}
