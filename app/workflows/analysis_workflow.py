@@ -1,13 +1,10 @@
-"""Analysis workflow placeholder."""
-from ..agents.strategy_agent import strategy_agent
-from ..agents.strategy_reviewer_agent import strategy_reviewer_agent
-
-# app/workflows/analysis_workflow.py
 """Analysis workflow."""
 
-from google.adk.agents import ParallelAgent, SequentialAgent, LoopAgent
+from google.adk.agents import LoopAgent, ParallelAgent, SequentialAgent
 
 from ..agents.race_data_agent import race_data_agent
+from ..agents.strategy_agent import strategy_agent
+from ..agents.strategy_reviewer_agent import strategy_reviewer_agent
 from ..agents.tyre_agent import tyre_agent
 from ..agents.weather_agent import weather_agent
 
@@ -27,12 +24,7 @@ strategy_review_loop = LoopAgent(
         strategy_agent,
         strategy_reviewer_agent,
     ],
-    # use the ADK version’s loop-control fields here
-    # e.g. max_iterations / max_loops / timeout / cost guardrails
-# max_iterations = 3
-# time_limit = 20 seconds
-# cost_limit = small fixed budget
-# success_condition = reviewer returns PASS
+    max_iterations=3,
 )
 
 race_strategy_pipeline = SequentialAgent(

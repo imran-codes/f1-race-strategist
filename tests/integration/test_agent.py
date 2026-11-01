@@ -1,6 +1,6 @@
 from google.adk.agents import SequentialAgent
 
-from app.agent import app, root_agent
+from app.agent import MODEL, app, root_agent
 
 
 def test_agent_module_wires_expected_symbols() -> None:
@@ -9,7 +9,14 @@ def test_agent_module_wires_expected_symbols() -> None:
 
 def test_root_agent_is_registered() -> None:
     assert root_agent.name == "race_director"
-    assert root_agent.model == "gemini-3.8-flash"
+    assert root_agent.model == MODEL
+
+
+def test_root_agent_exposes_race_context_tools() -> None:
+    assert {tool.__name__ for tool in root_agent.tools} == {
+        "get_race_context",
+        "save_race_context",
+    }
 
 
 def test_workflow_and_sub_agents_are_wired() -> None:
@@ -35,6 +42,3 @@ def test_workflow_and_sub_agents_are_wired() -> None:
         "tyre_specialist",
         "race_data_specialist",
     }
-
-
-

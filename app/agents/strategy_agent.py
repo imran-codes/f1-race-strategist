@@ -3,7 +3,6 @@ from google.adk.agents import Agent
 
 from ..tools.strategy_tool import calculate_pit_window
 
-
 strategy_agent = Agent(
     name="strategy_specialist",
     model="gemini-3.8-flash",

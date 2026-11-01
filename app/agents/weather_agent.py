@@ -3,7 +3,6 @@ from google.adk.agents import Agent
 
 from ..tools.weather_tool import get_weather_forecast
 
-
 weather_agent = Agent(
     name="weather_specialist",
     model="gemini-3.8-flash",

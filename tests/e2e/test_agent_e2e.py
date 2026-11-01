@@ -12,9 +12,9 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-def _run_prompt(prompt: str) -> str:
+async def _run_prompt(prompt: str) -> str:
     runner = InMemoryRunner(app=app)
-    events = runner.run_debug(
+    events = await runner.run_debug(
         prompt,
         user_id="e2e-user",
         session_id=f"e2e-{uuid.uuid4().hex}",
@@ -38,16 +38,18 @@ def _run_prompt(prompt: str) -> str:
     return "\n".join(response_texts).strip()
 
 
-def test_normal_user_prompt_returns_structured_strategy_response() -> None:
-    response = _run_prompt("Norris is P4 at Silverstone. Should we pit?")
+@pytest.mark.asyncio
+async def test_normal_user_prompt_returns_structured_strategy_response() -> None:
+    response = await _run_prompt("Norris is P4 at Silverstone. Should we pit?")
 
     assert response
     assert "RECOMMENDATION" in response.upper()
     assert "CONFIDENCE" in response.upper()
 
 
-def test_missing_information_requests_more_context() -> None:
-    response = _run_prompt("Should we pit?")
+@pytest.mark.asyncio
+async def test_missing_information_requests_more_context() -> None:
+    response = await _run_prompt("Should we pit?")
 
     assert response
     assert any(
@@ -56,8 +58,9 @@ def test_missing_information_requests_more_context() -> None:
     )
 
 
-def test_unsupported_driver_does_not_hallucinate_current_data() -> None:
-    response = _run_prompt("Analyse Ayrton Senna's current race.")
+@pytest.mark.asyncio
+async def test_unsupported_driver_does_not_hallucinate_current_data() -> None:
+    response = await _run_prompt("Analyse Ayrton Senna's current race.")
 
     assert response
     assert any(

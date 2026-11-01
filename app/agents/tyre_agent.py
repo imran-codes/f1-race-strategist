@@ -3,7 +3,6 @@ from google.adk.agents import Agent
 
 from ..tools.tyre_tool import analyse_tyre
 
-
 tyre_agent = Agent(
     name="tyre_specialist",
     model="gemini-3.8-flash",

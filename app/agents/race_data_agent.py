@@ -3,7 +3,6 @@ from google.adk.agents import Agent
 
 from ..tools.race_data_tool import get_race_state
 
-
 race_data_agent = Agent(
     name="race_data_specialist",
     model="gemini-3.8-flash",
